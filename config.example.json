@@ -1,13 +1,12 @@
 {
   "selectors": {
     "questionContainer": ".question-container",
-    "answerButton": "button.btn.choice-link",
-    "confirmButton": "button.confirm-next"
+    "answerButton": "a.btn.choice-link",
+    "confirmButton": "#confirm-choice"
   },
   "ai": {
     "provider": "openai",
-    "apiKey": "YOUR_API_KEY_HERE",
-    "model": "gpt-4"
+    "model": "gpt-4o-mini"
   },
   "browser": {
     "debugPort": 9222
