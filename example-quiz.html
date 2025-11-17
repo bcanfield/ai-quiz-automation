@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .question-container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        button.btn.choice-link {
+            padding: 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        button.btn.choice-link:hover {
+            background: #e3f2fd;
+            border-color: #2196F3;
+        }
+        button.btn.choice-link.selected {
+            background: #2196F3;
+            color: white;
+            border-color: #2196F3;
+        }
+        button.confirm-next {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button.confirm-next:hover {
+            background: #45a049;
+        }
+        button.confirm-next:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        #result.show {
+            display: block;
+        }
+        #result.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+        #result.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>Example Quiz for Testing</h1>
+    <p>This is a sample quiz page that can be used to test the quiz-helper tool.</p>
+    
+    <div id="quiz-content">
+        <div class="question-container">
+            <div class="question-text">
+                <p>What is the capital of France?</p>
+                <span>Choose the correct answer below:</span>
+            </div>
+            <div class="answers">
+                <button class="btn choice-link" data-answer="0">London</button>
+                <button class="btn choice-link" data-answer="1">Paris</button>
+                <button class="btn choice-link" data-answer="2">Berlin</button>
+                <button class="btn choice-link" data-answer="3">Madrid</button>
+            </div>
+        </div>
+        <button class="confirm-next" disabled>Confirm Answer</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                answers: ["London", "Paris", "Berlin", "Madrid"],
+                correct: 1
+            },
+            {
+                question: "What is 2 + 2?",
+                answers: ["3", "4", "5", "6"],
+                correct: 1
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                answers: ["Venus", "Jupiter", "Mars", "Saturn"],
+                correct: 2
+            }
+        ];
+
+        let selectedAnswer = null;
+
+        function setupQuestion() {
+            const q = questions[currentQuestion];
+            const container = document.querySelector('.question-container');
+            const questionText = container.querySelector('.question-text p');
+            const answersDiv = container.querySelector('.answers');
+            const resultDiv = document.getElementById('result');
+
+            questionText.textContent = q.question;
+            answersDiv.innerHTML = '';
+            resultDiv.className = '';
+            resultDiv.style.display = 'none';
+            selectedAnswer = null;
+            document.querySelector('.confirm-next').disabled = true;
+
+            q.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn choice-link';
+                btn.textContent = answer;
+                btn.dataset.answer = index;
+                btn.addEventListener('click', () => selectAnswer(index));
+                answersDiv.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(index) {
+            document.querySelectorAll('.btn.choice-link').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelectorAll('.btn.choice-link')[index].classList.add('selected');
+            selectedAnswer = index;
+            document.querySelector('.confirm-next').disabled = false;
+        }
+
+        document.querySelector('.confirm-next').addEventListener('click', () => {
+            const q = questions[currentQuestion];
+            const resultDiv = document.getElementById('result');
+            
+            if (selectedAnswer === q.correct) {
+                resultDiv.textContent = 'Correct!';
+                resultDiv.className = 'correct show';
+            } else {
+                resultDiv.textContent = 'Incorrect. The correct answer was: ' + q.answers[q.correct];
+                resultDiv.className = 'incorrect show';
+            }
+
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    setupQuestion();
+                } else {
+                    document.getElementById('quiz-content').innerHTML = '<h2>Quiz Complete!</h2><p>You have finished all questions.</p>';
+                }
+            }, 2000);
+        });
+
+        setupQuestion();
+    </script>
+</body>
+</html>
