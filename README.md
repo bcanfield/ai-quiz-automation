@@ -17,6 +17,37 @@ Quiz-helper is a **customizable framework** for automating quiz interactions. It
 - Violating website terms of service
 - Any unethical use cases
 
+## 🚀 Quick Start (5 Minutes)
+
+```bash
+# 1. Clone and install
+git clone https://github.com/bcanfield/quiz-helper.git
+cd quiz-helper
+npm install
+
+# 2. Set up configuration
+cp config.example.json config.json
+cp .env.example .env
+# Edit .env and add your OPENAI_API_KEY
+
+# 3. Build
+npm run build
+
+# 4. Start Chrome with debugging (in one terminal)
+# macOS:
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug
+
+# 5. Open example quiz in Chrome
+# Navigate to: file:///path/to/quiz-helper/example-quiz.html
+
+# 6. Run quiz-helper (in another terminal)
+npm start
+
+# Watch it automatically answer the quiz! 🎉
+```
+
+**Next Steps**: Adapt it for your quiz platform using [EXAMPLES.md](EXAMPLES.md) or [CUSTOMIZATION.md](CUSTOMIZATION.md)
+
 ## ✨ Key Features
 
 - **🔌 Browser Attachment**: Connects to your existing Chrome session (keeps your login/authentication)
@@ -35,7 +66,12 @@ This project is **intentionally designed to be customized**. Here's what you can
 - **Timing Patterns** (code): Adjust delays to match your needs
 - **Extraction Logic** (code): Handle complex question formats, images, etc.
 
-See **[CUSTOMIZATION.md](CUSTOMIZATION.md)** for a complete guide on adapting this tool to different quiz platforms.
+### 📚 Documentation for Developers
+
+- **[EXAMPLES.md](EXAMPLES.md)** - Ready-to-use configurations for common quiz platforms
+- **[CUSTOMIZATION.md](CUSTOMIZATION.md)** - Complete guide on adapting this tool
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Technical details and extension points
+- **[TESTING.md](TESTING.md)** - How to test your customizations
 
 ## Prerequisites
 
@@ -369,6 +405,45 @@ return { text: questionText, answers, imageUrl };
 ### Still Stuck?
 
 See [CUSTOMIZATION.md](CUSTOMIZATION.md) for detailed guidance on adapting to different quiz platforms, or check [TESTING.md](TESTING.md) for step-by-step testing instructions.
+
+## 🎨 What's Configurable vs What's Hard-Coded
+
+Understanding what you can change without touching code vs what requires code changes:
+
+### ✅ Configurable (config.json only)
+
+- CSS selectors for question, answers, confirm button
+- AI model choice (gpt-4, gpt-4o-mini, etc.)
+- Browser debug port
+- These work for **most** standard quiz platforms
+
+### ⚠️ May Need Code Changes
+
+- **Answer extraction logic** (`src/browser.ts:50`) - If answers aren't inside question container or have unique structure
+- **Timing patterns** (`src/browser.ts`) - If you want faster/slower interactions
+- **AI prompts** (`src/ai.ts`) - For special question formats
+- **Complex DOM structures** - Multi-part questions, images, etc.
+
+### 🔍 Current Implementation Details
+
+The original implementation is configured for a specific quiz platform with:
+- Questions in `.question-container`
+- Answers as `<a>` links with classes `.option.option-selector` **inside** the question container
+- Confirm button with ID `#confirm-choice`
+- Human-like delays: 4-8s reading, 800-2000ms thinking
+- Support for single and multiple-choice questions
+
+**Your platform different?** That's expected! See:
+- [EXAMPLES.md](EXAMPLES.md) - Pre-made configs for common platforms
+- [CUSTOMIZATION.md](CUSTOMIZATION.md) - How to modify for your platform
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Technical details for advanced customization
+
+## 📖 Additional Documentation
+
+- **[EXAMPLES.md](EXAMPLES.md)** - Configuration examples for 8+ common quiz types
+- **[CUSTOMIZATION.md](CUSTOMIZATION.md)** - 400+ line guide for adapting to your platform
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design and extension points
+- **[TESTING.md](TESTING.md)** - How to test and validate your changes
 
 ## License
 
