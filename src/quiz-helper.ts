@@ -15,35 +15,53 @@ export class QuizHelper {
 
   async start(): Promise<void> {
     console.log('Starting Quiz Helper...');
-    
+
     try {
       // Connect to browser
       await this.browser.connect();
-      
+
       // Process questions in a loop
       let questionNumber = 1;
-      
+
       while (await this.browser.hasMoreQuestions()) {
         console.log(`\n--- Question ${questionNumber} ---`);
-        
+
         // Extract question and answers
         const question = await this.browser.extractQuestion();
         console.log('Question:', question.text);
-        console.log('Answers:', question.answers);
-        
+        console.log(`Found ${question.answers.length} answer options`);
+
+        // Simulate realistic reading/thinking time (8-15 seconds)
+        await this.browser.simulateReading();
+
         // Get AI analysis
         const aiResponse = await this.ai.analyzeQuestion(question);
-        console.log(`AI selected answer: ${aiResponse.answerIndex} - "${question.answers[aiResponse.answerIndex]}"`);
-        
-        // Click the answer
-        await this.browser.clickAnswer(aiResponse.answerIndex);
-        
+
+        console.log(`AI selected ${aiResponse.answerIndices.length} answer(s):`);
+        for (const idx of aiResponse.answerIndices) {
+          console.log(`  [${idx}] ${question.answers[idx]}`);
+        }
+        console.log(`Reasoning: ${aiResponse.reasoning}`);
+
+        // Click each answer with a small delay between clicks
+        for (let i = 0; i < aiResponse.answerIndices.length; i++) {
+          await this.browser.clickAnswer(aiResponse.answerIndices[i]);
+
+          // Add realistic delay between multiple selections
+          // Humans take more time when selecting multiple answers
+          if (i < aiResponse.answerIndices.length - 1) {
+            const betweenSelectionsDelay = 800 + Math.random() * 1200;
+            console.log(`Considering additional answer... (${Math.round(betweenSelectionsDelay / 1000)}s)`);
+            await new Promise(resolve => setTimeout(resolve, betweenSelectionsDelay));
+          }
+        }
+
         // Click confirm to move to next question
         await this.browser.clickConfirm();
-        
+
         questionNumber++;
       }
-      
+
       console.log('\nQuiz completed!');
     } catch (error) {
       console.error('Error:', error);

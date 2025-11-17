@@ -12,7 +12,12 @@
     "dev": "tsx watch src/index.ts",
     "test": "tsx test/config-validation.ts"
   },
-  "keywords": ["quiz", "automation", "ai", "playwright"],
+  "keywords": [
+    "quiz",
+    "automation",
+    "ai",
+    "playwright"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -21,9 +26,11 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.68",
+    "ai": "^5.0.93",
     "dotenv": "^17.2.3",
-    "openai": "^6.9.0",
     "playwright": "^1.56.1",
-    "playwright-core": "^1.56.1"
+    "playwright-core": "^1.56.1",
+    "zod": "^4.1.12"
   }
 }

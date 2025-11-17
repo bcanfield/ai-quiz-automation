@@ -12,7 +12,7 @@ dotenv.config();
 async function main() {
   // Load configuration
   const configPath = process.argv[2] || './config.json';
-  
+
   if (!fs.existsSync(configPath)) {
     console.error(`Configuration file not found: ${configPath}`);
     console.error('Please create a config.json file. See config.example.json for reference.');
@@ -20,18 +20,15 @@ async function main() {
   }
 
   let config: Config;
-  
+
   try {
     const configContent = fs.readFileSync(configPath, 'utf-8');
     config = JSON.parse(configContent);
-    
-    // Override API key from environment variable if available
-    if (process.env.OPENAI_API_KEY) {
-      config.ai.apiKey = process.env.OPENAI_API_KEY;
-    }
-    
-    if (!config.ai.apiKey || config.ai.apiKey === 'YOUR_API_KEY_HERE') {
-      console.error('Please set your OpenAI API key in config.json or OPENAI_API_KEY environment variable');
+
+    // Verify OPENAI_API_KEY is set
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('Please set the OPENAI_API_KEY environment variable');
+      console.error('Example: export OPENAI_API_KEY=your-api-key-here');
       process.exit(1);
     }
   } catch (error) {
@@ -41,7 +38,7 @@ async function main() {
 
   // Create and start quiz helper
   const quizHelper = new QuizHelper(config);
-  
+
   try {
     await quizHelper.start();
   } catch (error) {
