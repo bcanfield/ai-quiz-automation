@@ -1,0 +1,29 @@
+{
+  "name": "quiz-helper",
+  "version": "1.0.0",
+  "description": "A TypeScript tool to help with answering quiz questions using AI (ethical proof of concept)",
+  "main": "dist/index.js",
+  "bin": {
+    "quiz-helper": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["quiz", "automation", "ai", "playwright"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "openai": "^6.9.0",
+    "playwright": "^1.56.1",
+    "playwright-core": "^1.56.1"
+  }
+}
