@@ -35,7 +35,6 @@ function validateConfig() {
     'selectors.confirmButton',
     'ai',
     'ai.provider',
-    'ai.apiKey',
     'ai.model',
     'browser',
     'browser.debugPort'
