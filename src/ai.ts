@@ -1,7 +1,29 @@
-import { generateText, Output, stepCountIs } from 'ai';
+import { generateText, generateObject, Output, stepCountIs, tool } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
 import { Config, Question, AIResponse } from './types';
+
+interface ConstraintAnalysis {
+  criticalWords: string[];
+  constraints: Array<{
+    constraint: string;
+    invalidatesOptions: number[];
+  }>;
+  searchFocusAreas: string[];
+  validationChecklist: string[];
+}
+
+interface EvaluationResult {
+  qualityScore: number;
+  passesAllConstraints: boolean;
+  constraintChecks: Array<{
+    constraint: string;
+    passes: boolean;
+    explanation: string;
+  }>;
+  issues: string[];
+  improvementSuggestions: string[];
+}
 
 export class AIHelper {
   private config: Config;
@@ -18,116 +40,192 @@ export class AIHelper {
   }
 
   async analyzeQuestion(question: Question): Promise<AIResponse> {
-    console.log('Analyzing question with AI (web search enabled)...');
+    console.log('Analyzing question with AI (Evaluator-Optimizer workflow)...');
 
-    try {
-      const result = await generateText({
-        model: openai.responses(this.config.ai.model),
-        prompt: this.buildPrompt(question),
-        tools: {
-          web_search_preview: openai.tools.webSearch({
-            searchContextSize: 'high',
-          }),
-        },
-        toolChoice: 'required', // Force initial web search
-        stopWhen: stepCountIs(5), // Allow up to 5 steps for multiple searches if needed
-        onStepFinish: ({ toolCalls, sources }) => {
-          // Log tool calls (search queries)
-          if (toolCalls?.length > 0) {
-            toolCalls.forEach(call => {
-              if (!call.dynamic && call.toolName === 'web_search_preview') {
-                console.log(`🔍 Web search triggered`);
-              }
-            });
-          }
+    const MAX_ITERATIONS = 3;
+    const CONFIDENCE_THRESHOLD = 90;
+    let iteration = 0;
 
-          // Log sources retrieved
-          if (sources?.length > 0) {
-            console.log(`📚 Sources retrieved (${sources.length}):`);
-            sources.forEach(source => {
-              if (source.sourceType === 'url') {
-                console.log(`   - ${source.url}`);
-              }
-            });
-          }
-        },
-        output: Output.object({
-          schema: z.object({
-            answerIndices: z.array(z.number()).describe('Array of 0-based answer indices'),
-            reasoning: z.string().describe('Explanation for the answer selection'),
-          }),
-        }),
-        temperature: 0.2,
-      });
+    // Step 1: Analyze constraints (once)
+    console.log('\n🧠 Analyzing question constraints...');
+    const constraints = await this.analyzeConstraints(question);
 
-      // Log final sources summary
-      if (result.sources && result.sources.length > 0) {
-        console.log(`\n✅ Total sources consulted: ${result.sources.length}`);
+    // Evaluator-Optimizer loop
+    while (iteration < MAX_ITERATIONS) {
+      iteration++;
+      console.log(`\n🔄 Iteration ${iteration}/${MAX_ITERATIONS}`);
+
+      // Generate answer with web search
+      const answer = await this.generateAnswer(question, constraints);
+
+      // Evaluate answer quality
+      const evaluation = await this.evaluateAnswer(question, answer, constraints);
+      console.log(`   Score: ${evaluation.qualityScore}/100`);
+      console.log(`   Constraints: ${evaluation.passesAllConstraints ? '✅ Pass' : '❌ Fail'}`);
+
+      // Check if answer meets quality threshold
+      if (evaluation.qualityScore >= CONFIDENCE_THRESHOLD && evaluation.passesAllConstraints) {
+        console.log(`\n✅ Answer validated with high confidence`);
+        return answer;
       }
 
-      // Validate indices
-      for (const idx of result.output.answerIndices) {
-        if (idx < 0 || idx >= question.answers.length) {
-          throw new Error(`Invalid answer index from AI: ${idx}`);
+      // If not final iteration, log issues and try again
+      if (iteration < MAX_ITERATIONS) {
+        console.log(`\n⚠️  Quality below threshold - trying again...`);
+        if (evaluation.issues.length > 0) {
+          console.log(`   Issues: ${evaluation.issues.join(', ')}`);
         }
+      } else {
+        console.log(`\n⚠️  Max iterations reached - returning best attempt`);
+        return answer;
       }
-
-      console.log(`AI selected ${result.output.answerIndices.length} answer(s): ${result.output.answerIndices.join(', ')}`);
-      console.log(`Reasoning: ${result.output.reasoning}`);
-
-      return result.output;
-    } catch (error) {
-      throw new Error(`AI analysis failed: ${error}`);
     }
+
+    throw new Error('Failed to generate answer');
   }
 
-  private buildPrompt(question: Question): string {
-    let prompt = `You are an expert at answering technical certification exam questions. You have access to web search to find authoritative, up-to-date information.
+  private async analyzeConstraints(question: Question) {
+    const analysis = await generateObject({
+      model: openai(this.config.ai.model),
+      schema: z.object({
+        criticalWords: z.array(z.string()).describe('Critical words/phrases that change answer validity'),
+        constraints: z.array(z.object({
+          constraint: z.string(),
+          invalidatesOptions: z.array(z.number())
+        })),
+        searchFocusAreas: z.array(z.string()).describe('Specific technical terms to search'),
+        validationChecklist: z.array(z.string()).describe('Questions to verify each answer')
+      }),
+      prompt: `Analyze this question for critical constraints:
 
-${this.config.ai.customPrompt ? `CUSTOM INSTRUCTIONS:
-${this.config.ai.customPrompt}
+Question: ${question.text}
 
-` : ''}WEB SEARCH STRATEGY:
-CRITICAL - Before searching, identify the KEY TECHNICAL TERMS in the question
-- You MUST perform at least 2 web searches before answering.
-- Your search query MUST include these exact technical terms
-- Verify that search results actually discuss the key technical term from the question
-- If results don't mention the key term, perform a new search with better keywords
-- For "associated with" or "related to" questions, look for direct technical relationships and definitional connections
-- Search for official documentation, certification guides, and authoritative technical sources
-- If initial results are unclear or conflicting, perform additional targeted searches
-- Prioritize recent and official sources over general information
-- Compare results from multiple searches to ensure accuracy
+Options:
+${question.answers.map((a, i) => `${i}. ${a}`).join('\n')}
 
-ANSWER SELECTION RULES:
-EXAM PATTERN AWARENESS:
-- If the question mentions a specific technology (e.g., "hypervisor", "VPN", "SSL"), the correct answer often:
-  * Directly defines or categorizes that technology (e.g., hypervisor IS virtualization software)
-  * Has a technical parent-child or "type-of" relationship
-- Beware of distractor answers that are generally related to security but not to the specific technology mentioned in the question
+Identify:
+1. Critical qualifiers (e.g., "still supported" = NOT end-of-life, "targeting X" = vulnerability IN X)
+2. Negations (e.g., "NOT", "except")
+3. Scope limiters (e.g., "for this app" vs general)
+4. Technical terms needing exact definitions
 
-By default, select only ONE correct answer.
-
-Only provide multiple answers if the question EXPLICITLY indicates it with phrases such as:
-- "Select all that apply"
-- "Choose 2 answers" or "Select 2 answers" or "Pick 2 answers"
-- "Select the three best options" or "Choose three" or "Select 3"
-- "Select multiple"
-- Or any similar phrasing that specifies a number or "all that apply"
-
-IMPORTANT: If the question specifies a NUMBER (e.g., "select 3", "choose two"), you MUST provide exactly that many answer indices.
-
-If the question does not explicitly state to select multiple answers, you MUST provide exactly one answer.
-
-`;
-    prompt += `Question: ${question.text}\n\nAnswer options:\n`;
-
-    question.answers.forEach((answer, index) => {
-      prompt += `${index}. ${answer}\n`;
+For each constraint, specify which options it eliminates.`,
     });
 
-    prompt += '\n\nProvide the index/indices (0-based) of the correct answer(s) and explain your reasoning based on the authoritative sources you found.';
+    console.log(`   ✅ Found ${analysis.object.criticalWords.length} critical words: ${analysis.object.criticalWords.join(', ')}`);
+    console.log(`   ✅ Identified ${analysis.object.constraints.length} constraints`);
 
-    return prompt;
+    return analysis.object;
   }
+
+  private async generateAnswer(
+    question: Question,
+    constraints: ConstraintAnalysis
+  ): Promise<AIResponse> {
+    const result = await generateText({
+      model: openai.responses(this.config.ai.model),
+      prompt: this.buildSearchPrompt(question, constraints),
+      tools: {
+        web_search_preview: openai.tools.webSearch({
+          searchContextSize: 'high',
+        }),
+      },
+      toolChoice: 'required', // Force web search
+      stopWhen: stepCountIs(5),
+      onStepFinish: ({ sources }) => {
+        if (sources?.length > 0) {
+          console.log(`   📚 ${sources.length} sources retrieved`);
+        }
+      },
+      output: Output.object({
+        schema: z.object({
+          answerIndices: z.array(z.number()),
+          reasoning: z.string(),
+        }),
+      }),
+    });      // Validate indices
+    for (const idx of result.output.answerIndices) {
+      if (idx < 0 || idx >= question.answers.length) {
+        throw new Error(`Invalid answer index: ${idx}`);
+      }
+    }
+
+    return result.output;
+  }
+
+  private async evaluateAnswer(
+    question: Question,
+    answer: AIResponse,
+    constraints: ConstraintAnalysis
+  ): Promise<EvaluationResult> {
+    const evaluation = await generateObject({
+      model: openai(this.config.ai.model),
+      schema: z.object({
+        qualityScore: z.number().min(0).max(100),
+        passesAllConstraints: z.boolean(),
+        constraintChecks: z.array(z.object({
+          constraint: z.string(),
+          passes: z.boolean(),
+          explanation: z.string()
+        })),
+        issues: z.array(z.string()),
+        improvementSuggestions: z.array(z.string())
+      }),
+      prompt: `Evaluate this answer against the question constraints:
+
+Question: ${question.text}
+
+Selected Answer(s): ${answer.answerIndices.map(i => `${i}. ${question.answers[i]}`).join(', ')}
+
+Reasoning: ${answer.reasoning}
+
+Constraints to verify:
+${constraints.constraints.map((c, i) => `${i + 1}. ${c.constraint}`).join('\n')}
+
+Critical words to check: ${constraints.criticalWords.join(', ')}
+
+Validation checklist:
+${constraints.validationChecklist.map((q, i) => `${i + 1}. ${q}`).join('\n')}
+
+Evaluate:
+1. Does the answer violate any constraints?
+2. Does it account for all critical words/qualifiers?
+3. Overall quality score (0-100)
+4. Specific issues found
+5. Suggestions for improvement`,
+    });
+
+    return evaluation.object;
+  }
+
+  private buildSearchPrompt(question: Question, constraints: ConstraintAnalysis): string {
+    return `You are an expert at answering technical certification questions using web search.
+
+${this.config.ai.customPrompt ? `CUSTOM INSTRUCTIONS:\n${this.config.ai.customPrompt}\n\n` : ''}CONSTRAINT ANALYSIS:
+Critical Words: ${constraints.criticalWords.join(', ')}
+Search Focus Areas: ${constraints.searchFocusAreas.join(', ')}
+
+Constraints that eliminate options:
+${constraints.constraints.map(c => `- ${c.constraint} (eliminates options: ${c.invalidatesOptions.join(', ')})`).join('\n')}
+
+Validation Checklist:
+${constraints.validationChecklist.map((q, i) => `${i + 1}. ${q}`).join('\n')}
+
+SEARCH STRATEGY:
+- Perform 2-3 targeted searches using the search focus areas
+- Verify findings against critical words and constraints
+- Look for authoritative sources (official docs, certification guides)
+
+Question: ${question.text}
+
+Answer options:
+${question.answers.map((a, i) => `${i}. ${a}`).join('\n')}
+
+ANSWER SELECTION:
+By default, select only ONE answer.
+Only select multiple if explicitly stated: "Select all", "Choose 2", "Select 3", etc.
+
+Provide answer indices and reasoning based on authoritative sources that satisfy ALL constraints.`;
+  }
+
 }
