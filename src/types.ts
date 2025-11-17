@@ -8,6 +8,7 @@ export interface Config {
     provider: string;
     apiKey: string;
     model: string;
+    customPrompt?: string;
   };
   browser: {
     debugPort: number;

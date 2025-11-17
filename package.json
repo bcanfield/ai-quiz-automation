@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "start": "tsx src/index.ts",
     "dev": "tsx watch src/index.ts",
     "test": "tsx test/config-validation.ts"
@@ -26,11 +27,11 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^2.0.68",
-    "ai": "^5.0.93",
-    "dotenv": "^17.2.3",
-    "playwright": "^1.56.1",
-    "playwright-core": "^1.56.1",
-    "zod": "^4.1.12"
+    "@ai-sdk/openai": "3.0.0-beta.60",
+    "ai": "6.0.0-beta.99",
+    "dotenv": "17.2.3",
+    "playwright": "1.56.1",
+    "playwright-core": "1.56.1",
+    "zod": "4.1.12"
   }
 }

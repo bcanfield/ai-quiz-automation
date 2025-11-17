@@ -6,7 +6,8 @@
   },
   "ai": {
     "provider": "openai",
-    "model": "gpt-4o-mini"
+    "model": "gpt-4o-mini",
+    "customPrompt": "IMPORTANT: Hypervisor software is a type of virtualization technology. When questions ask about hypervisor vulnerabilities, the answer relates to Virtualization, not Legacy systems or EOL."
   },
   "browser": {
     "debugPort": 9222
