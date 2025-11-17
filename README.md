@@ -78,8 +78,10 @@ Start Chrome with remote debugging enabled:
 
 **macOS:**
 ```bash
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug-profile
 ```
+
+> **Note for macOS**: Using `--user-data-dir` with a temporary directory is required to ensure Chrome starts with debugging enabled. If you need to use your existing Chrome profile, first close all Chrome instances completely before running the command.
 
 **Windows:**
 ```bash

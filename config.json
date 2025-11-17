@@ -1,0 +1,14 @@
+{
+  "selectors": {
+    "questionContainer": ".question-container",
+    "answerButton": "a.btn.choice-link",
+    "confirmButton": "#confirm-choice"
+  },
+  "ai": {
+    "provider": "openai",
+    "model": "gpt-4o-mini"
+  },
+  "browser": {
+    "debugPort": 9222
+  }
+}

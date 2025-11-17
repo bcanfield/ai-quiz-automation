@@ -16,7 +16,7 @@ export class BrowserHelper {
       this.browser = await chromium.connectOverCDP(
         `http://localhost:${this.config.browser.debugPort}`
       );
-      
+
       const contexts = this.browser.contexts();
       if (contexts.length === 0) {
         throw new Error('No browser contexts found. Make sure a browser tab is open.');
@@ -40,18 +40,26 @@ export class BrowserHelper {
       throw new Error('Browser not connected');
     }
 
+    console.log('Extracting question...');
+
     // Extract question text from nested elements
     const questionContainer = await this.page.locator(this.config.selectors.questionContainer).first();
     const questionText = await questionContainer.innerText();
 
-    // Extract answer options
-    const answerButtons = await this.page.locator(this.config.selectors.answerButton).all();
+    // Extract answer options from within the question container
+    const answerOptions = await this.page.locator(`${this.config.selectors.questionContainer} a.option.option-selector`).all();
     const answers: string[] = [];
-    
-    for (const button of answerButtons) {
-      const text = await button.innerText();
+
+    for (const option of answerOptions) {
+      const text = await option.innerText();
       answers.push(text.trim());
     }
+
+    if (answers.length === 0) {
+      throw new Error('No answer options found. This might be a results or submit page.');
+    }
+
+    console.log(`Found ${answers.length} answer options`);
 
     return {
       text: questionText.trim(),
@@ -65,14 +73,20 @@ export class BrowserHelper {
     }
 
     const answerButtons = await this.page.locator(this.config.selectors.answerButton).all();
-    
+
     if (answerIndex < 0 || answerIndex >= answerButtons.length) {
       throw new Error(`Invalid answer index: ${answerIndex}`);
     }
 
-    // Add random delay to simulate human behavior
-    await this.randomDelay(500, 1500);
-    
+    // Simulate thinking/decision time before clicking (varies by person)
+    await this.randomDelay(800, 2000);
+
+    // Occasionally hesitate before clicking (15% chance) - simulating second-guessing
+    if (Math.random() < 0.15) {
+      console.log('Reconsidering answer...');
+      await this.randomDelay(1000, 2500);
+    }
+
     await answerButtons[answerIndex].click();
     console.log(`Clicked answer ${answerIndex + 1}`);
   }
@@ -82,14 +96,21 @@ export class BrowserHelper {
       throw new Error('Browser not connected');
     }
 
-    // Add random delay to simulate human behavior
-    await this.randomDelay(1000, 2000);
-    
-    await this.page.locator(this.config.selectors.confirmButton).first().click();
+    // Pause to review answer before confirming (humans often double-check)
+    await this.randomDelay(1200, 2500);
+
+    // Wait for confirm button to be enabled (not have is-disabled class)
+    const confirmButton = this.page.locator(this.config.selectors.confirmButton).first();
+    await confirmButton.waitFor({ state: 'visible', timeout: 5000 });
+
+    // Natural delay before actually clicking confirm
+    await this.randomDelay(400, 900);
+
+    await confirmButton.click();
     console.log('Clicked confirm button');
-    
-    // Wait for next question to load
-    await this.randomDelay(1000, 2000);
+
+    // Wait for next question to load (with natural variation)
+    await this.randomDelay(1500, 2500);
   }
 
   async hasMoreQuestions(): Promise<boolean> {
@@ -102,6 +123,52 @@ export class BrowserHelper {
       return await questionContainer.isVisible();
     } catch {
       return false;
+    }
+  }
+
+  async simulateReading(): Promise<void> {
+    if (!this.page) {
+      throw new Error('Browser not connected');
+    }
+
+    // Base reading time: 4-8 seconds
+    const baseReadingTime = 4000 + Math.random() * 4000;
+
+    // Occasionally take longer (10% chance) - simulating careful consideration
+    const extraTime = Math.random() < 0.1 ? 1000 + Math.random() * 2000 : 0;
+
+    const totalTime = baseReadingTime + extraTime;
+
+    if (extraTime > 0) {
+      console.log(`Reading question carefully... (${Math.round(totalTime / 1000)}s)`);
+    } else {
+      console.log(`Reading question... (${Math.round(totalTime / 1000)}s)`);
+    }
+
+    // Simulate natural reading by breaking it into smaller chunks with micro-pauses
+    const chunks = 3 + Math.floor(Math.random() * 3); // 3-5 chunks
+    const chunkTime = totalTime / chunks;
+
+    for (let i = 0; i < chunks; i++) {
+      await new Promise(resolve => setTimeout(resolve, chunkTime));
+
+      // Occasionally move mouse slightly to simulate activity (20% chance per chunk)
+      if (Math.random() < 0.2) {
+        await this.simulateMouseMovement();
+      }
+    }
+  }
+
+  private async simulateMouseMovement(): Promise<void> {
+    if (!this.page) return;
+
+    try {
+      // Small random mouse movement to simulate human reading behavior
+      const x = 100 + Math.random() * 300;
+      const y = 100 + Math.random() * 200;
+      await this.page.mouse.move(x, y, { steps: 5 + Math.floor(Math.random() * 10) });
+    } catch {
+      // Ignore errors from mouse movement
     }
   }
 

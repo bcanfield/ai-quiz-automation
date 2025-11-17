@@ -20,6 +20,6 @@ export interface Question {
 }
 
 export interface AIResponse {
-  answerIndex: number;
-  confidence: number;
+  answerIndices: number[];
+  reasoning: string;
 }
