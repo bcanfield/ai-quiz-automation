@@ -6,7 +6,8 @@
   },
   "ai": {
     "provider": "openai",
-    "model": "gpt-4o-mini"
+    "model": "gpt-4o-mini",
+    "customPrompt": "Optional: Add custom instructions here. Example: 'Hypervisor vulnerabilities are always categorized under Virtualization, not Legacy systems.'"
   },
   "browser": {
     "debugPort": 9222
