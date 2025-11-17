@@ -68,6 +68,7 @@ This project is **intentionally designed to be customized**. Here's what you can
 
 ### 📚 Documentation for Developers
 
+- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - One-page cheat sheet for fast setup ⚡
 - **[EXAMPLES.md](EXAMPLES.md)** - Ready-to-use configurations for common quiz platforms
 - **[CUSTOMIZATION.md](CUSTOMIZATION.md)** - Complete guide on adapting this tool
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - Technical details and extension points
@@ -438,12 +439,16 @@ The original implementation is configured for a specific quiz platform with:
 - [CUSTOMIZATION.md](CUSTOMIZATION.md) - How to modify for your platform
 - [ARCHITECTURE.md](ARCHITECTURE.md) - Technical details for advanced customization
 
-## 📖 Additional Documentation
+## 📖 Complete Documentation
 
-- **[EXAMPLES.md](EXAMPLES.md)** - Configuration examples for 8+ common quiz types
-- **[CUSTOMIZATION.md](CUSTOMIZATION.md)** - 400+ line guide for adapting to your platform
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design and extension points
-- **[TESTING.md](TESTING.md)** - How to test and validate your changes
+| Document | Best For | Length |
+|----------|----------|--------|
+| **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** | Fast lookup, cheat sheet | 1 page ⚡ |
+| **[EXAMPLES.md](EXAMPLES.md)** | Finding a matching configuration | ~400 lines |
+| **[CUSTOMIZATION.md](CUSTOMIZATION.md)** | Adapting to your platform | ~400 lines |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | Understanding the system | ~200 lines |
+| **[TESTING.md](TESTING.md)** | Testing your changes | ~150 lines |
+| **[README.md](README.md)** | Complete overview | You are here |
 
 ## License
 
