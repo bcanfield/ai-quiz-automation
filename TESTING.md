@@ -146,8 +146,40 @@ The tool has been tested with:
 3. Test in a sandbox/demo environment first
 4. Update selectors in `config.json` to match the platform's HTML structure
 
-To find the correct selectors:
+### Finding the Correct Selectors
+
+**Quick Method**:
 1. Open the quiz page in Chrome
-2. Right-click on elements and select "Inspect"
-3. Note the CSS classes and IDs
-4. Update your config.json accordingly
+2. Right-click on the question text → "Inspect"
+3. In DevTools, right-click the highlighted element → "Copy" → "Copy selector"
+4. Paste into your config.json
+5. Repeat for answer buttons and confirm button
+
+**Verification**:
+Test your selectors in Chrome DevTools Console:
+```javascript
+// Should return 1 element
+document.querySelectorAll('.your-question-container').length
+
+// Should return all answer options
+document.querySelectorAll('.your-answer-button').length
+
+// Should return 1 element
+document.querySelectorAll('.your-confirm-button').length
+```
+
+### Need Examples?
+
+Check [EXAMPLES.md](EXAMPLES.md) for ready-to-use configurations for common quiz platforms:
+- Button-based quizzes
+- Form-based quizzes
+- Card-based quizzes
+- Multiple choice (select all)
+- And more!
+
+### Need to Customize Code?
+
+If the selectors alone don't work, see [CUSTOMIZATION.md](CUSTOMIZATION.md) for:
+- Modifying answer extraction logic
+- Handling different quiz structures
+- Adding support for images, dropdowns, etc.
