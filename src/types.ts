@@ -7,6 +7,7 @@ export interface Config {
   ai: {
     provider: string;
     model: string;
+    customPrompt?: string;
   };
   browser: {
     debugPort: number;

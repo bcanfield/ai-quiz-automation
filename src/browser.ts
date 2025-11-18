@@ -1,5 +1,6 @@
 import { chromium, Browser, Page } from 'playwright';
-import { Config, Question } from './types';
+import { Config, Question } from './types.js';
+import { logger } from './logger.js';
 
 export class BrowserHelper {
   private browser: Browser | null = null;
@@ -29,7 +30,7 @@ export class BrowserHelper {
 
       // Use the first page (active tab)
       this.page = pages[0];
-      console.log('Connected to browser tab:', await this.page.title());
+      logger.connected(`Browser tab: ${await this.page.title()}`);
     } catch (error) {
       throw new Error(`Failed to connect to browser: ${error}`);
     }
@@ -40,14 +41,14 @@ export class BrowserHelper {
       throw new Error('Browser not connected');
     }
 
-    console.log('Extracting question...');
+    logger.extracting('Extracting question...');
 
     // Extract question text from nested elements
     const questionContainer = await this.page.locator(this.config.selectors.questionContainer).first();
     const questionText = await questionContainer.innerText();
 
-    // Extract answer options from within the question container
-    const answerOptions = await this.page.locator(`${this.config.selectors.questionContainer} a.option.option-selector`).all();
+    // Extract answer options using the configured selector
+    const answerOptions = await this.page.locator(this.config.selectors.answerButton).all();
     const answers: string[] = [];
 
     for (const option of answerOptions) {
@@ -58,8 +59,6 @@ export class BrowserHelper {
     if (answers.length === 0) {
       throw new Error('No answer options found. This might be a results or submit page.');
     }
-
-    console.log(`Found ${answers.length} answer options`);
 
     return {
       text: questionText.trim(),
@@ -78,17 +77,17 @@ export class BrowserHelper {
       throw new Error(`Invalid answer index: ${answerIndex}`);
     }
 
-    // Simulate thinking/decision time before clicking (varies by person)
-    await this.randomDelay(800, 2000);
+    // Simulate thinking/decision time before clicking (reduced)
+    await this.randomDelay(400, 1000);
 
-    // Occasionally hesitate before clicking (15% chance) - simulating second-guessing
-    if (Math.random() < 0.15) {
-      console.log('Reconsidering answer...');
-      await this.randomDelay(1000, 2500);
+    // Occasionally hesitate before clicking (10% chance) - simulating second-guessing
+    if (Math.random() < 0.10) {
+      logger.info('Reconsidering answer...');
+      await this.randomDelay(500, 1200);
     }
 
     await answerButtons[answerIndex].click();
-    console.log(`Clicked answer ${answerIndex + 1}`);
+    logger.action(`Clicked answer ${answerIndex + 1}`);
   }
 
   async clickConfirm(): Promise<void> {
@@ -96,21 +95,21 @@ export class BrowserHelper {
       throw new Error('Browser not connected');
     }
 
-    // Pause to review answer before confirming (humans often double-check)
-    await this.randomDelay(1200, 2500);
+    // Pause to review answer before confirming (reduced)
+    await this.randomDelay(600, 1200);
 
     // Wait for confirm button to be enabled (not have is-disabled class)
     const confirmButton = this.page.locator(this.config.selectors.confirmButton).first();
     await confirmButton.waitFor({ state: 'visible', timeout: 5000 });
 
     // Natural delay before actually clicking confirm
-    await this.randomDelay(400, 900);
+    await this.randomDelay(200, 500);
 
     await confirmButton.click();
-    console.log('Clicked confirm button');
+    logger.action('Clicked confirm button');
 
-    // Wait for next question to load (with natural variation)
-    await this.randomDelay(1500, 2500);
+    // Wait for next question to load (reduced)
+    await this.randomDelay(800, 1500);
   }
 
   async hasMoreQuestions(): Promise<boolean> {
@@ -131,18 +130,18 @@ export class BrowserHelper {
       throw new Error('Browser not connected');
     }
 
-    // Base reading time: 4-8 seconds
-    const baseReadingTime = 4000 + Math.random() * 4000;
+    // Base reading time: 2-4 seconds (reduced since AI takes longer)
+    const baseReadingTime = 2000 + Math.random() * 2000;
 
     // Occasionally take longer (10% chance) - simulating careful consideration
-    const extraTime = Math.random() < 0.1 ? 1000 + Math.random() * 2000 : 0;
+    const extraTime = Math.random() < 0.1 ? 500 + Math.random() * 1000 : 0;
 
     const totalTime = baseReadingTime + extraTime;
 
     if (extraTime > 0) {
-      console.log(`Reading question carefully... (${Math.round(totalTime / 1000)}s)`);
+      logger.info(`Reading question carefully... (${Math.round(totalTime / 1000)}s)`);
     } else {
-      console.log(`Reading question... (${Math.round(totalTime / 1000)}s)`);
+      logger.info(`Reading question... (${Math.round(totalTime / 1000)}s)`);
     }
 
     // Simulate natural reading by breaking it into smaller chunks with micro-pauses
