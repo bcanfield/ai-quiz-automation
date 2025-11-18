@@ -1,6 +1,6 @@
 # Architecture
 
-How quiz-helper is built and how the pieces fit together.
+How ai-quiz-automation is built and how the pieces fit together.
 
 ## High-Level Overview
 
@@ -14,7 +14,7 @@ How quiz-helper is built and how the pieces fit together.
                   │
                   ▼
 ┌─────────────────────────────────────────────────┐
-│         QuizHelper (quiz-helper.ts)              │
+│         QuizHelper (ai-quiz-automation.ts)              │
 │  Main orchestration loop:                        │
 │  1. Connect to browser                           │
 │  2. While questions exist:                       │
@@ -51,7 +51,7 @@ The script that runs when you execute `npm start`.
 - Validate that `OPENAI_API_KEY` is set
 - Create and start `QuizHelper` instance
 
-### 2. QuizHelper (`src/quiz-helper.ts`)
+### 2. QuizHelper (`src/ai-quiz-automation.ts`)
 
 The main coordinator that runs the automation loop.
 
@@ -224,7 +224,7 @@ Edit `src/ai.ts`:
 
 ### Add Logging/Analytics
 
-Edit `src/quiz-helper.ts`:
+Edit `src/ai-quiz-automation.ts`:
 - Track success rate
 - Log all questions and answers to a file
 - Record timing for each question
@@ -256,10 +256,10 @@ The tool only:
 ## File Structure
 
 ```
-quiz-helper/
+ai-quiz-automation/
 ├── src/
 │   ├── index.ts          # Entry point
-│   ├── quiz-helper.ts    # Main orchestrator
+│   ├── ai-quiz-automation.ts    # Main orchestrator
 │   ├── browser.ts        # Browser automation
 │   ├── ai.ts             # OpenAI integration
 │   └── types.ts          # TypeScript interfaces

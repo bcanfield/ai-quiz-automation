@@ -1,10 +1,10 @@
 # Adapting the Tool
 
-How to configure quiz-helper for different quiz websites.
+How to configure ai-quiz-automation for different quiz websites.
 
 ## The Core Concept
 
-Quiz-helper is designed to be site-agnostic. It works by locating elements on the page using CSS selectors. To adapt it for a new quiz site, you simply need to identify the right selectors.
+Ai-quiz-automation is designed to be site-agnostic. It works by locating elements on the page using CSS selectors. To adapt it for a new quiz site, you simply need to identify the right selectors.
 
 ## Step-by-Step Guide
 
