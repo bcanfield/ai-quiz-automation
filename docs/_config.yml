@@ -5,21 +5,21 @@ theme: jekyll-theme-cayman
 # Navigation
 nav_links:
   - title: Home
-    url: /quiz-helper/
+    url: /ai-quiz-automation/
   - title: Setup
-    url: /quiz-helper/SETUP.html
+    url: /ai-quiz-automation/SETUP.html
   - title: Testing
-    url: /quiz-helper/TESTING.html
+    url: /ai-quiz-automation/TESTING.html
   - title: Adapting
-    url: /quiz-helper/ADAPTING.html
+    url: /ai-quiz-automation/ADAPTING.html
   - title: Configuration
-    url: /quiz-helper/CONFIG.html
+    url: /ai-quiz-automation/CONFIG.html
   - title: Architecture
-    url: /quiz-helper/ARCHITECTURE.html
+    url: /ai-quiz-automation/ARCHITECTURE.html
   - title: Troubleshooting
-    url: /quiz-helper/TROUBLESHOOTING.html
+    url: /ai-quiz-automation/TROUBLESHOOTING.html
   - title: Ethical Use
-    url: /quiz-helper/ETHICAL_USE.html
+    url: /ai-quiz-automation/ETHICAL_USE.html
 
 # GitHub
 repository: bcanfield/quiz-helper
