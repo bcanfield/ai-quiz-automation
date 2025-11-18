@@ -47,10 +47,10 @@ export class QuizHelper {
         for (let i = 0; i < aiResponse.answerIndices.length; i++) {
           await this.browser.clickAnswer(aiResponse.answerIndices[i]);
 
-          // Add realistic delay between multiple selections
+          // Add realistic delay between multiple selections (reduced since AI takes longer)
           // Humans take more time when selecting multiple answers
           if (i < aiResponse.answerIndices.length - 1) {
-            const betweenSelectionsDelay = 800 + Math.random() * 1200;
+            const betweenSelectionsDelay = 400 + Math.random() * 600;
             console.log(`Considering additional answer... (${Math.round(betweenSelectionsDelay / 1000)}s)`);
             await new Promise(resolve => setTimeout(resolve, betweenSelectionsDelay));
           }

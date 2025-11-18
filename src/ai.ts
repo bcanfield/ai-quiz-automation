@@ -1,4 +1,4 @@
-import { generateText, generateObject, Output, stepCountIs, tool } from 'ai';
+import { generateText, generateObject, Output, stepCountIs, tool, NoObjectGeneratedError } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
 import { Config, Question, AIResponse } from './types';
@@ -85,18 +85,20 @@ export class AIHelper {
   }
 
   private async analyzeConstraints(question: Question) {
-    const analysis = await generateObject({
-      model: openai(this.config.ai.model),
-      schema: z.object({
-        criticalWords: z.array(z.string()).describe('Critical words/phrases that change answer validity'),
-        constraints: z.array(z.object({
-          constraint: z.string(),
-          invalidatesOptions: z.array(z.number())
-        })),
-        searchFocusAreas: z.array(z.string()).describe('Specific technical terms to search'),
-        validationChecklist: z.array(z.string()).describe('Questions to verify each answer')
-      }),
-      prompt: `Analyze this question for critical constraints:
+    try {
+      const analysis = await generateObject({
+        model: openai(this.config.ai.model),
+        maxRetries: 3,
+        schema: z.object({
+          criticalWords: z.array(z.string()).describe('Critical words/phrases that change answer validity'),
+          constraints: z.array(z.object({
+            constraint: z.string(),
+            invalidatesOptions: z.array(z.number())
+          })),
+          searchFocusAreas: z.array(z.string()).describe('Specific technical terms to search'),
+          validationChecklist: z.array(z.string()).describe('Questions to verify each answer')
+        }),
+        prompt: `Analyze this question for critical constraints:
 
 Question: ${question.text}
 
@@ -110,12 +112,20 @@ Identify:
 4. Technical terms needing exact definitions
 
 For each constraint, specify which options it eliminates.`,
-    });
+      });
 
-    console.log(`   ✅ Found ${analysis.object.criticalWords.length} critical words: ${analysis.object.criticalWords.join(', ')}`);
-    console.log(`   ✅ Identified ${analysis.object.constraints.length} constraints`);
+      console.log(`   ✅ Found ${analysis.object.criticalWords.length} critical words: ${analysis.object.criticalWords.join(', ')}`);
+      console.log(`   ✅ Identified ${analysis.object.constraints.length} constraints`);
 
-    return analysis.object;
+      return analysis.object;
+    } catch (error) {
+      if (NoObjectGeneratedError.isInstance(error)) {
+        console.error('❌ Failed to analyze constraints:');
+        console.error('   Cause:', error.cause);
+        console.error('   Text:', error.text);
+      }
+      throw error;
+    }
   }
 
   private async generateAnswer(
@@ -124,6 +134,7 @@ For each constraint, specify which options it eliminates.`,
   ): Promise<AIResponse> {
     const result = await generateText({
       model: openai.responses(this.config.ai.model),
+      maxRetries: 3,
       prompt: this.buildSearchPrompt(question, constraints),
       tools: {
         web_search_preview: openai.tools.webSearch({
@@ -158,20 +169,27 @@ For each constraint, specify which options it eliminates.`,
     answer: AIResponse,
     constraints: ConstraintAnalysis
   ): Promise<EvaluationResult> {
-    const evaluation = await generateObject({
-      model: openai(this.config.ai.model),
-      schema: z.object({
-        qualityScore: z.number().min(0).max(100),
-        passesAllConstraints: z.boolean(),
-        constraintChecks: z.array(z.object({
-          constraint: z.string(),
-          passes: z.boolean(),
-          explanation: z.string()
-        })),
-        issues: z.array(z.string()),
-        improvementSuggestions: z.array(z.string())
-      }),
-      prompt: `Evaluate this answer against the question constraints:
+    try {
+      const evaluation = await generateObject({
+        model: openai(this.config.ai.model),
+        maxRetries: 3,
+        providerOptions: {
+          openai: {
+            strictJsonSchema: false, // Disable strict JSON schema for Responses API models
+          },
+        },
+        schema: z.object({
+          qualityScore: z.number().min(0).max(100),
+          passesAllConstraints: z.boolean(),
+          constraintChecks: z.array(z.object({
+            constraint: z.string(),
+            passes: z.boolean(),
+            explanation: z.string()
+          })),
+          issues: z.array(z.string()),
+          improvementSuggestions: z.array(z.string())
+        }),
+        prompt: `Evaluate this answer against the question constraints:
 
 Question: ${question.text}
 
@@ -193,9 +211,17 @@ Evaluate:
 3. Overall quality score (0-100)
 4. Specific issues found
 5. Suggestions for improvement`,
-    });
+      });
 
-    return evaluation.object;
+      return evaluation.object;
+    } catch (error) {
+      if (NoObjectGeneratedError.isInstance(error)) {
+        console.error('❌ Failed to evaluate answer:');
+        console.error('   Cause:', error.cause);
+        console.error('   Text:', error.text);
+      }
+      throw error;
+    }
   }
 
   private buildSearchPrompt(question: Question, constraints: ConstraintAnalysis): string {
