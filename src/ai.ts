@@ -1,7 +1,8 @@
 import { generateText, generateObject, Output, stepCountIs, tool, NoObjectGeneratedError } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
-import { Config, Question, AIResponse } from './types';
+import { Config, Question, AIResponse } from './types.js';
+import { logger } from './logger.js';
 
 interface ConstraintAnalysis {
   criticalWords: string[];
@@ -36,47 +37,47 @@ export class AIHelper {
       throw new Error('OPENAI_API_KEY environment variable is not set');
     }
 
-    console.log('OpenAI provider initialized with model:', config.ai.model);
+    logger.info(`OpenAI provider initialized with model: ${config.ai.model}`);
   }
 
   async analyzeQuestion(question: Question): Promise<AIResponse> {
-    console.log('Analyzing question with AI (Evaluator-Optimizer workflow)...');
+    logger.analyzing('Analyzing question with AI (Evaluator-Optimizer workflow)...');
 
     const MAX_ITERATIONS = 3;
     const CONFIDENCE_THRESHOLD = 90;
     let iteration = 0;
 
     // Step 1: Analyze constraints (once)
-    console.log('\n🧠 Analyzing question constraints...');
+    logger.analyzing('Analyzing question constraints...');
     const constraints = await this.analyzeConstraints(question);
 
     // Evaluator-Optimizer loop
     while (iteration < MAX_ITERATIONS) {
       iteration++;
-      console.log(`\n🔄 Iteration ${iteration}/${MAX_ITERATIONS}`);
+      logger.iteration(iteration, MAX_ITERATIONS);
 
       // Generate answer with web search
       const answer = await this.generateAnswer(question, constraints);
 
       // Evaluate answer quality
       const evaluation = await this.evaluateAnswer(question, answer, constraints);
-      console.log(`   Score: ${evaluation.qualityScore}/100`);
-      console.log(`   Constraints: ${evaluation.passesAllConstraints ? '✅ Pass' : '❌ Fail'}`);
+      logger.score(evaluation.qualityScore, 100);
+      logger.constraints(evaluation.passesAllConstraints);
 
       // Check if answer meets quality threshold
       if (evaluation.qualityScore >= CONFIDENCE_THRESHOLD && evaluation.passesAllConstraints) {
-        console.log(`\n✅ Answer validated with high confidence`);
+        logger.success('Answer validated with high confidence');
         return answer;
       }
 
       // If not final iteration, log issues and try again
       if (iteration < MAX_ITERATIONS) {
-        console.log(`\n⚠️  Quality below threshold - trying again...`);
+        logger.warning('Quality below threshold - trying again...');
         if (evaluation.issues.length > 0) {
-          console.log(`   Issues: ${evaluation.issues.join(', ')}`);
+          logger.indent(`Issues: ${evaluation.issues.join(', ')}`);
         }
       } else {
-        console.log(`\n⚠️  Max iterations reached - returning best attempt`);
+        logger.warning('Max iterations reached - returning best attempt');
         return answer;
       }
     }
@@ -114,15 +115,13 @@ Identify:
 For each constraint, specify which options it eliminates.`,
       });
 
-      console.log(`   ✅ Found ${analysis.object.criticalWords.length} critical words: ${analysis.object.criticalWords.join(', ')}`);
-      console.log(`   ✅ Identified ${analysis.object.constraints.length} constraints`);
+      logger.success(`Found ${analysis.object.criticalWords.length} critical words: ${analysis.object.criticalWords.join(', ')}`);
+      logger.success(`Identified ${analysis.object.constraints.length} constraints`);
 
       return analysis.object;
     } catch (error) {
       if (NoObjectGeneratedError.isInstance(error)) {
-        console.error('❌ Failed to analyze constraints:');
-        console.error('   Cause:', error.cause);
-        console.error('   Text:', error.text);
+        logger.errorWithDetails('Failed to analyze constraints:', error.cause, error.text);
       }
       throw error;
     }
@@ -145,7 +144,7 @@ For each constraint, specify which options it eliminates.`,
       stopWhen: stepCountIs(5),
       onStepFinish: ({ sources }) => {
         if (sources?.length > 0) {
-          console.log(`   📚 ${sources.length} sources retrieved`);
+          logger.sources(sources.length);
         }
       },
       output: Output.object({
@@ -216,9 +215,7 @@ Evaluate:
       return evaluation.object;
     } catch (error) {
       if (NoObjectGeneratedError.isInstance(error)) {
-        console.error('❌ Failed to evaluate answer:');
-        console.error('   Cause:', error.cause);
-        console.error('   Text:', error.text);
+        logger.errorWithDetails('Failed to evaluate answer:', error.cause, error.text);
       }
       throw error;
     }

@@ -1,6 +1,7 @@
 {
   "name": "quiz-helper",
   "version": "1.0.0",
+  "type": "module",
   "description": "A TypeScript tool to help with answering quiz questions using AI (ethical proof of concept)",
   "main": "dist/index.js",
   "bin": {
@@ -30,6 +31,8 @@
   "dependencies": {
     "@ai-sdk/openai": "3.0.0-beta.60",
     "ai": "6.0.0-beta.99",
+    "boxen": "^8.0.1",
+    "chalk": "^5.6.2",
     "dotenv": "17.2.3",
     "playwright": "1.56.1",
     "playwright-core": "1.56.1",

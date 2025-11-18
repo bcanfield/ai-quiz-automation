@@ -1,21 +1,27 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// ESM equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Simple test to validate configuration file structure
  */
 function validateConfig() {
   const configPath = path.join(__dirname, '..', 'config.example.json');
-  
+
   console.log('Testing configuration validation...');
-  
+
   // Check if example config exists
   if (!fs.existsSync(configPath)) {
     console.error('❌ config.example.json not found');
     process.exit(1);
   }
   console.log('✓ config.example.json exists');
-  
+
   // Parse config
   let config;
   try {
@@ -26,7 +32,7 @@ function validateConfig() {
     console.error('❌ Failed to parse configuration:', error);
     process.exit(1);
   }
-  
+
   // Validate required fields
   const requiredFields = [
     'selectors',
@@ -39,22 +45,22 @@ function validateConfig() {
     'browser',
     'browser.debugPort'
   ];
-  
+
   for (const field of requiredFields) {
     const parts = field.split('.');
     let value = config;
-    
+
     for (const part of parts) {
       value = value?.[part];
     }
-    
+
     if (value === undefined || value === null) {
       console.error(`❌ Missing required field: ${field}`);
       process.exit(1);
     }
     console.log(`✓ Field '${field}' is present`);
   }
-  
+
   console.log('\n✅ All configuration tests passed!');
 }
 
