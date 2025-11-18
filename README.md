@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 
-[📚 **Full Documentation**](https://bcanfield.github.io/quiz-helper/) • [🚀 Quick Start](#quick-start) • [⚙️ Configuration](https://bcanfield.github.io/quiz-helper/CONFIG.html)
+[📚 **Full Documentation**](https://bcanfield.github.io/ai-quiz-automation/) • [🚀 Quick Start](#quick-start) • [⚙️ Configuration](https://bcanfield.github.io/ai-quiz-automation/CONFIG.html)
 
 ![Demo](.github/demo.gif)
 
@@ -20,7 +20,7 @@
 
 A proof-of-concept tool demonstrating AI integration with browser automation. Connects to Chrome via DevTools Protocol, extracts quiz questions using CSS selectors, and uses OpenAI to generate answers.
 
-**⚠️ Educational use only** — See [ethical guidelines](https://bcanfield.github.io/quiz-helper/ETHICAL_USE.html)
+**⚠️ Educational use only** — See [ethical guidelines](https://bcanfield.github.io/ai-quiz-automation/ETHICAL_USE.html)
 
 ## Quick Start
 
@@ -51,14 +51,14 @@ npm start
 
 ## Documentation
 
-📘 Visit **[bcanfield.github.io/quiz-helper](https://bcanfield.github.io/quiz-helper/)** for complete documentation:
+📘 Visit **[bcanfield.github.io/ai-quiz-automation](https://bcanfield.github.io/ai-quiz-automation/)** for complete documentation:
 
-- **[Setup Guide](https://bcanfield.github.io/quiz-helper/SETUP.html)** — Installation and configuration
-- **[Testing](https://bcanfield.github.io/quiz-helper/TESTING.html)** — Run the example quiz
-- **[Adapting](https://bcanfield.github.io/quiz-helper/ADAPTING.html)** — Configure for different quiz sites
-- **[Configuration Reference](https://bcanfield.github.io/quiz-helper/CONFIG.html)** — All available options
-- **[Architecture](https://bcanfield.github.io/quiz-helper/ARCHITECTURE.html)** — Technical deep dive
-- **[Troubleshooting](https://bcanfield.github.io/quiz-helper/TROUBLESHOOTING.html)** — Common issues
+- **[Setup Guide](https://bcanfield.github.io/ai-quiz-automation/SETUP.html)** — Installation and configuration
+- **[Testing](https://bcanfield.github.io/ai-quiz-automation/TESTING.html)** — Run the example quiz
+- **[Adapting](https://bcanfield.github.io/ai-quiz-automation/ADAPTING.html)** — Configure for different quiz sites
+- **[Configuration Reference](https://bcanfield.github.io/ai-quiz-automation/CONFIG.html)** — All available options
+- **[Architecture](https://bcanfield.github.io/ai-quiz-automation/ARCHITECTURE.html)** — Technical deep dive
+- **[Troubleshooting](https://bcanfield.github.io/ai-quiz-automation/TROUBLESHOOTING.html)** — Common issues
 
 ## ⚠️ Important
 
@@ -67,7 +67,7 @@ This is a **proof of concept** for educational purposes only. Using automation o
 - Break platform terms of service  
 - Be illegal under computer fraud laws
 
-**Read the [ethical use guidelines](https://bcanfield.github.io/quiz-helper/ETHICAL_USE.html) before proceeding.**
+**Read the [ethical use guidelines](https://bcanfield.github.io/ai-quiz-automation/ETHICAL_USE.html) before proceeding.**
 
 ## License
 

@@ -22,9 +22,9 @@ nav_links:
     url: /ai-quiz-automation/ETHICAL_USE.html
 
 # GitHub
-repository: bcanfield/quiz-helper
+repository: bcanfield/ai-quiz-automation
 github:
-  repository_url: https://github.com/bcanfield/quiz-helper
+  repository_url: https://github.com/bcanfield/ai-quiz-automation
 
 # SEO and metadata
 author: bcanfield
