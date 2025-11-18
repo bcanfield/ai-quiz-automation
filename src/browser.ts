@@ -78,13 +78,13 @@ export class BrowserHelper {
       throw new Error(`Invalid answer index: ${answerIndex}`);
     }
 
-    // Simulate thinking/decision time before clicking (varies by person)
-    await this.randomDelay(800, 2000);
+    // Simulate thinking/decision time before clicking (reduced)
+    await this.randomDelay(400, 1000);
 
-    // Occasionally hesitate before clicking (15% chance) - simulating second-guessing
-    if (Math.random() < 0.15) {
+    // Occasionally hesitate before clicking (10% chance) - simulating second-guessing
+    if (Math.random() < 0.10) {
       console.log('Reconsidering answer...');
-      await this.randomDelay(1000, 2500);
+      await this.randomDelay(500, 1200);
     }
 
     await answerButtons[answerIndex].click();
@@ -96,21 +96,21 @@ export class BrowserHelper {
       throw new Error('Browser not connected');
     }
 
-    // Pause to review answer before confirming (humans often double-check)
-    await this.randomDelay(1200, 2500);
+    // Pause to review answer before confirming (reduced)
+    await this.randomDelay(600, 1200);
 
     // Wait for confirm button to be enabled (not have is-disabled class)
     const confirmButton = this.page.locator(this.config.selectors.confirmButton).first();
     await confirmButton.waitFor({ state: 'visible', timeout: 5000 });
 
     // Natural delay before actually clicking confirm
-    await this.randomDelay(400, 900);
+    await this.randomDelay(200, 500);
 
     await confirmButton.click();
     console.log('Clicked confirm button');
 
-    // Wait for next question to load (with natural variation)
-    await this.randomDelay(1500, 2500);
+    // Wait for next question to load (reduced)
+    await this.randomDelay(800, 1500);
   }
 
   async hasMoreQuestions(): Promise<boolean> {
@@ -131,11 +131,11 @@ export class BrowserHelper {
       throw new Error('Browser not connected');
     }
 
-    // Base reading time: 4-8 seconds
-    const baseReadingTime = 4000 + Math.random() * 4000;
+    // Base reading time: 2-4 seconds (reduced since AI takes longer)
+    const baseReadingTime = 2000 + Math.random() * 2000;
 
     // Occasionally take longer (10% chance) - simulating careful consideration
-    const extraTime = Math.random() < 0.1 ? 1000 + Math.random() * 2000 : 0;
+    const extraTime = Math.random() < 0.1 ? 500 + Math.random() * 1000 : 0;
 
     const totalTime = baseReadingTime + extraTime;
 
