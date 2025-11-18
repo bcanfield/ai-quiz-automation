@@ -1,11 +1,11 @@
 {
-  "name": "quiz-helper",
+  "name": "ai-quiz-automation",
   "version": "1.0.0",
   "type": "module",
   "description": "A TypeScript tool to help with answering quiz questions using AI (ethical proof of concept)",
   "main": "dist/index.js",
   "bin": {
-    "quiz-helper": "./dist/index.js"
+    "ai-quiz-automation": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",

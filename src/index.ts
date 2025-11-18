@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { QuizHelper } from './quiz-helper.js';
+import { QuizHelper } from './ai-quiz-automation.js';
 import { Config } from './types.js';
 import * as dotenv from 'dotenv';
 import { logger } from './logger.js';

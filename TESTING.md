@@ -1,6 +1,6 @@
 # Testing Guide
 
-Quick guide to verify quiz-helper works.
+Quick guide to verify ai-quiz-automation works.
 
 ## Quick Test
 

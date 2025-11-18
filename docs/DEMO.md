@@ -1,6 +1,6 @@
 # Quiz Helper Demo Guide
 
-This guide shows how to run a live demo of the quiz-helper tool using the included example quiz.
+This guide shows how to run a live demo of the ai-quiz-automation tool using the included example quiz.
 
 ## Prerequisites
 

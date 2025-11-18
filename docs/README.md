@@ -1,10 +1,10 @@
 # Documentation
 
-Complete documentation for quiz-helper.
+Complete documentation for ai-quiz-automation.
 
 ## Getting Started
 
-New to quiz-helper? Start here:
+New to ai-quiz-automation? Start here:
 
 1. **[Setup & Installation](SETUP.md)** - Get the tool running
 2. **[Testing](../TESTING.md)** - Verify it works with the example quiz

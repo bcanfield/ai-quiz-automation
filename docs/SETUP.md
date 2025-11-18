@@ -1,6 +1,6 @@
 # Setup & Installation
 
-Complete setup guide for quiz-helper.
+Complete setup guide for ai-quiz-automation.
 
 ## Requirements
 
@@ -13,8 +13,8 @@ Complete setup guide for quiz-helper.
 ### 1. Clone and Install
 
 ```bash
-git clone https://github.com/bcanfield/quiz-helper.git
-cd quiz-helper
+git clone https://github.com/bcanfield/ai-quiz-automation.git
+cd ai-quiz-automation
 npm install
 ```
 
@@ -77,7 +77,7 @@ google-chrome --remote-debugging-port=9222
 1. With Chrome running with debugging enabled, open the example quiz:
    ```bash
    open example-quiz.html  # macOS
-   # Or navigate to file:///path/to/quiz-helper/example-quiz.html
+   # Or navigate to file:///path/to/ai-quiz-automation/example-quiz.html
    ```
 
 2. Run the tool:
