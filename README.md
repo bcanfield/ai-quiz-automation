@@ -49,6 +49,7 @@ See **[Adapting the Tool](docs/ADAPTING.md)** for a detailed guide.
 
 ## Documentation
 
+- **[Demo Guide](docs/DEMO.md)** - Step-by-step instructions to run a live demo
 - **[Setup & Installation](docs/SETUP.md)** - Detailed setup instructions
 - **[Adapting the Tool](docs/ADAPTING.md)** - How to use with different quiz sites
 - **[Configuration Guide](docs/CONFIG.md)** - All configuration options explained

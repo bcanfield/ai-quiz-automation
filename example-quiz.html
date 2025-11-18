@@ -27,7 +27,8 @@
             flex-direction: column;
             gap: 10px;
         }
-        button.btn.choice-link {
+        a.btn.choice-link.option.option-selector {
+            display: block;
             padding: 15px;
             background: white;
             border: 2px solid #ddd;
@@ -35,17 +36,19 @@
             cursor: pointer;
             text-align: left;
             transition: all 0.2s;
+            text-decoration: none;
+            color: #333;
         }
-        button.btn.choice-link:hover {
+        a.btn.choice-link.option.option-selector:hover {
             background: #e3f2fd;
             border-color: #2196F3;
         }
-        button.btn.choice-link.selected {
+        a.btn.choice-link.option.option-selector.selected {
             background: #2196F3;
             color: white;
             border-color: #2196F3;
         }
-        button.confirm-next {
+        button#confirm-choice {
             margin-top: 20px;
             padding: 12px 30px;
             background: #4CAF50;
@@ -55,10 +58,10 @@
             cursor: pointer;
             font-size: 16px;
         }
-        button.confirm-next:hover {
+        button#confirm-choice:hover {
             background: #45a049;
         }
-        button.confirm-next:disabled {
+        button#confirm-choice:disabled {
             background: #cccccc;
             cursor: not-allowed;
         }
@@ -92,13 +95,13 @@
                 <span>Choose the correct answer below:</span>
             </div>
             <div class="answers">
-                <button class="btn choice-link" data-answer="0">London</button>
-                <button class="btn choice-link" data-answer="1">Paris</button>
-                <button class="btn choice-link" data-answer="2">Berlin</button>
-                <button class="btn choice-link" data-answer="3">Madrid</button>
+                <a href="#" class="btn choice-link option option-selector" data-answer="0">London</a>
+                <a href="#" class="btn choice-link option option-selector" data-answer="1">Paris</a>
+                <a href="#" class="btn choice-link option option-selector" data-answer="2">Berlin</a>
+                <a href="#" class="btn choice-link option option-selector" data-answer="3">Madrid</a>
             </div>
         </div>
-        <button class="confirm-next" disabled>Confirm Answer</button>
+        <button id="confirm-choice" disabled>Confirm Answer</button>
         <div id="result"></div>
     </div>
 
@@ -106,19 +109,19 @@
         let currentQuestion = 0;
         const questions = [
             {
-                question: "What is the capital of France?",
-                answers: ["London", "Paris", "Berlin", "Madrid"],
+                question: "In J.R.R. Tolkien's legendarium, what was the original name of Sméagol's friend who he murdered to obtain the One Ring?",
+                answers: ["Déagol", "Banazîr", "Gollum", "Sméagol himself found it alone"],
+                correct: 0
+            },
+            {
+                question: "What is the name of the inn in Bree where Frodo first meets Aragorn in 'The Fellowship of the Ring'?",
+                answers: ["The Green Dragon", "The Prancing Pony", "The Golden Perch", "The Ivy Bush"],
                 correct: 1
             },
             {
-                question: "What is 2 + 2?",
-                answers: ["3", "4", "5", "6"],
+                question: "In 'The Silmarillion', which Vala is known as the Lord of Waters and spouse of Varda?",
+                answers: ["Manwë", "Ulmo", "Aulë", "Mandos"],
                 correct: 1
-            },
-            {
-                question: "Which planet is known as the Red Planet?",
-                answers: ["Venus", "Jupiter", "Mars", "Saturn"],
-                correct: 2
             }
         ];
 
@@ -136,28 +139,32 @@
             resultDiv.className = '';
             resultDiv.style.display = 'none';
             selectedAnswer = null;
-            document.querySelector('.confirm-next').disabled = true;
+            document.querySelector('#confirm-choice').disabled = true;
 
             q.answers.forEach((answer, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'btn choice-link';
-                btn.textContent = answer;
-                btn.dataset.answer = index;
-                btn.addEventListener('click', () => selectAnswer(index));
-                answersDiv.appendChild(btn);
+                const link = document.createElement('a');
+                link.href = '#';
+                link.className = 'btn choice-link option option-selector';
+                link.textContent = answer;
+                link.dataset.answer = index;
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    selectAnswer(index);
+                });
+                answersDiv.appendChild(link);
             });
         }
 
         function selectAnswer(index) {
-            document.querySelectorAll('.btn.choice-link').forEach(btn => {
+            document.querySelectorAll('a.btn.choice-link.option.option-selector').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            document.querySelectorAll('.btn.choice-link')[index].classList.add('selected');
+            document.querySelectorAll('a.btn.choice-link.option.option-selector')[index].classList.add('selected');
             selectedAnswer = index;
-            document.querySelector('.confirm-next').disabled = false;
+            document.querySelector('#confirm-choice').disabled = false;
         }
 
-        document.querySelector('.confirm-next').addEventListener('click', () => {
+        document.querySelector('#confirm-choice').addEventListener('click', () => {
             const q = questions[currentQuestion];
             const resultDiv = document.getElementById('result');
             
