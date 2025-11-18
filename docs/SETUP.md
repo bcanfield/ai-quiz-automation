@@ -1,96 +1,65 @@
 # Setup & Installation
 
-Complete setup guide for ai-quiz-automation.
-
 ## Requirements
 
-- Node.js 18 or higher
-- Chrome or Chromium browser
+- Node.js 18+
+- Chrome browser
 - OpenAI API key ([get one here](https://platform.openai.com/api-keys))
 
-## Installation Steps
-
-### 1. Clone and Install
+## Install
 
 ```bash
 git clone https://github.com/bcanfield/ai-quiz-automation.git
 cd ai-quiz-automation
-npm install
+npm install && npm run build
 ```
 
-### 2. Build
+## Configure
 
+**1. Add your API key:**
 ```bash
-npm run build
+echo "OPENAI_API_KEY=your-key" > .env
 ```
 
-### 3. Configure API Key
-
-Create a `.env` file:
-
-```bash
-echo "OPENAI_API_KEY=your-actual-api-key" > .env
-```
-
-Or export it in your shell:
-
-```bash
-export OPENAI_API_KEY=your-actual-api-key
-```
-
-### 4. Create Configuration
-
+**2. Copy the example config:**
 ```bash
 cp config.example.json config.json
 ```
 
-The default configuration works with the included `example-quiz.html` for testing.
+The default config works with `example-quiz.html` for testing.
 
-## Starting Chrome with Debugging
+## Start Chrome with Debugging
 
-The tool needs to connect to Chrome via the Chrome DevTools Protocol. Start Chrome with remote debugging enabled:
+The tool connects to Chrome using the Chrome DevTools Protocol.
 
-### macOS
-
+**macOS:**
 ```bash
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
   --remote-debugging-port=9222 \
-  --user-data-dir=/tmp/chrome-debug-profile
+  --user-data-dir=/tmp/chrome-debug
 ```
 
-**Note:** The `--user-data-dir` flag with a temp directory ensures Chrome starts fresh with debugging enabled.
-
-### Windows
-
+**Linux:**
 ```bash
-"C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222
+google-chrome --remote-debugging-port=9222 \
+  --user-data-dir=/tmp/chrome-debug
 ```
 
-### Linux
-
+**Windows:**
 ```bash
-google-chrome --remote-debugging-port=9222
+"C:\Program Files\Google\Chrome\Application\chrome.exe" ^
+  --remote-debugging-port=9222 ^
+  --user-data-dir=C:\temp\chrome-debug
 ```
 
-## Testing Your Setup
+The `--user-data-dir` flag uses a temporary profile so your normal Chrome isn't affected.
 
-1. With Chrome running with debugging enabled, open the example quiz:
-   ```bash
-   open example-quiz.html  # macOS
-   # Or navigate to file:///path/to/ai-quiz-automation/example-quiz.html
-   ```
+## Test It
 
-2. Run the tool:
-   ```bash
-   npm start
-   ```
+See [Testing](TESTING.md) for a complete walkthrough of running the example quiz.
 
-3. Watch it automatically answer the three example questions.
+## Next Steps
 
-## What's Next?
-
-Once you've verified the tool works with the example quiz:
-
-- Read **[Adapting the Tool](ADAPTING.md)** to use it with your own quiz site
-- Check **[Configuration Guide](CONFIG.md)** for all available options
-- See **[Troubleshooting](TROUBLESHOOTING.md)** if you run into issues
+- [Testing](TESTING.md) - Verify it works
+- [Adapting](ADAPTING.md) - Configure for your quiz site
+- [Troubleshooting](TROUBLESHOOTING.md) - Fix common issues

@@ -51,12 +51,15 @@ See **[Adapting the Tool](docs/ADAPTING.md)** for a detailed guide.
 
 ## Documentation
 
-- **[Demo Guide](docs/DEMO.md)** - Step-by-step instructions to run a live demo
-- **[Setup & Installation](docs/SETUP.md)** - Detailed setup instructions
-- **[Adapting the Tool](docs/ADAPTING.md)** - How to use with different quiz sites
-- **[Configuration Guide](docs/CONFIG.md)** - All configuration options explained
-- **[Architecture Overview](docs/ARCHITECTURE.md)** - How the code works
-- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+📚 **[Full Documentation](https://bcanfield.github.io/ai-quiz-automation/)** - Complete guides and reference
+
+Quick links:
+- **[Setup](docs/SETUP.md)** - Installation and configuration
+- **[Testing](docs/TESTING.md)** - Run the example quiz
+- **[Adapting](docs/ADAPTING.md)** - Configure for different sites
+- **[Configuration](docs/CONFIG.md)** - All config options
+- **[Architecture](docs/ARCHITECTURE.md)** - How the code works
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues
 
 ## Important Ethical Warning
 
