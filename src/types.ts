@@ -6,7 +6,6 @@ export interface Config {
   };
   ai: {
     provider: string;
-    apiKey: string;
     model: string;
     customPrompt?: string;
   };
