@@ -2,6 +2,8 @@
 
 An AI-powered browser automation tool that connects to Chrome and answers quiz questions. Built as a proof of concept to explore AI integration with browser automation.
 
+![Demo](.github/demo.gif)
+
 **⚠️ This tool was NOT used for cheating.** It's a technical demonstration created in a controlled environment for learning purposes.
 
 ## What is this?
