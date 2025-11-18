@@ -6,7 +6,8 @@
   },
   "ai": {
     "provider": "openai",
-    "model": "gpt-4o-mini"
+    "model": "gpt-5.1",
+    "customPrompt": "Optional: Add custom instructions here. Example: 'When questions ask about the school mascot, the answer relates to animals, not colors.'"
   },
   "browser": {
     "debugPort": 9222
