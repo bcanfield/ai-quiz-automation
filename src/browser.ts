@@ -1,5 +1,6 @@
 import { chromium, Browser, Page } from 'playwright';
-import { Config, Question } from './types';
+import { Config, Question } from './types.js';
+import { logger } from './logger.js';
 
 export class BrowserHelper {
   private browser: Browser | null = null;
@@ -29,7 +30,7 @@ export class BrowserHelper {
 
       // Use the first page (active tab)
       this.page = pages[0];
-      console.log('Connected to browser tab:', await this.page.title());
+      logger.connected(`Browser tab: ${await this.page.title()}`);
     } catch (error) {
       throw new Error(`Failed to connect to browser: ${error}`);
     }
@@ -40,7 +41,7 @@ export class BrowserHelper {
       throw new Error('Browser not connected');
     }
 
-    console.log('Extracting question...');
+    logger.extracting('Extracting question...');
 
     // Extract question text from nested elements
     const questionContainer = await this.page.locator(this.config.selectors.questionContainer).first();
@@ -58,8 +59,6 @@ export class BrowserHelper {
     if (answers.length === 0) {
       throw new Error('No answer options found. This might be a results or submit page.');
     }
-
-    console.log(`Found ${answers.length} answer options`);
 
     return {
       text: questionText.trim(),
@@ -83,12 +82,12 @@ export class BrowserHelper {
 
     // Occasionally hesitate before clicking (10% chance) - simulating second-guessing
     if (Math.random() < 0.10) {
-      console.log('Reconsidering answer...');
+      logger.info('Reconsidering answer...');
       await this.randomDelay(500, 1200);
     }
 
     await answerButtons[answerIndex].click();
-    console.log(`Clicked answer ${answerIndex + 1}`);
+    logger.action(`Clicked answer ${answerIndex + 1}`);
   }
 
   async clickConfirm(): Promise<void> {
@@ -107,7 +106,7 @@ export class BrowserHelper {
     await this.randomDelay(200, 500);
 
     await confirmButton.click();
-    console.log('Clicked confirm button');
+    logger.action('Clicked confirm button');
 
     // Wait for next question to load (reduced)
     await this.randomDelay(800, 1500);
@@ -140,9 +139,9 @@ export class BrowserHelper {
     const totalTime = baseReadingTime + extraTime;
 
     if (extraTime > 0) {
-      console.log(`Reading question carefully... (${Math.round(totalTime / 1000)}s)`);
+      logger.info(`Reading question carefully... (${Math.round(totalTime / 1000)}s)`);
     } else {
-      console.log(`Reading question... (${Math.round(totalTime / 1000)}s)`);
+      logger.info(`Reading question... (${Math.round(totalTime / 1000)}s)`);
     }
 
     // Simulate natural reading by breaking it into smaller chunks with micro-pauses
