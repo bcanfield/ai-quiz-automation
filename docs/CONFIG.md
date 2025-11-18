@@ -1,3 +1,8 @@
+---
+layout: default
+title: Configuration Reference
+---
+
 # Configuration Reference
 
 All options in `config.json`.

@@ -1,3 +1,8 @@
+---
+layout: default
+title: Testing Guide
+---
+
 # Testing Guide
 
 Verify the tool works with the included example quiz.

@@ -1,3 +1,49 @@
 title: AI Quiz Automation
 description: Browser automation tool that connects to Chrome and answers quiz questions using AI
 theme: jekyll-theme-cayman
+
+# Navigation
+nav_links:
+  - title: Home
+    url: /quiz-helper/
+  - title: Setup
+    url: /quiz-helper/SETUP.html
+  - title: Testing
+    url: /quiz-helper/TESTING.html
+  - title: Adapting
+    url: /quiz-helper/ADAPTING.html
+  - title: Configuration
+    url: /quiz-helper/CONFIG.html
+  - title: Architecture
+    url: /quiz-helper/ARCHITECTURE.html
+  - title: Troubleshooting
+    url: /quiz-helper/TROUBLESHOOTING.html
+  - title: Ethical Use
+    url: /quiz-helper/ETHICAL_USE.html
+
+# GitHub
+repository: bcanfield/quiz-helper
+github:
+  repository_url: https://github.com/bcanfield/quiz-helper
+
+# SEO and metadata
+author: bcanfield
+twitter_username: 
+logo: 
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Build settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Exclude from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock

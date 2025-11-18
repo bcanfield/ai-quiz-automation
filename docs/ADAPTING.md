@@ -1,3 +1,8 @@
+---
+layout: default
+title: Adapting the Tool
+---
+
 # Adapting the Tool
 
 Configure the tool for any quiz website by finding the right CSS selectors.

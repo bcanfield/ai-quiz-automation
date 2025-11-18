@@ -22,7 +22,7 @@
     "playwright"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^24.10.1",
     "tsx": "^4.20.6",
