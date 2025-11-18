@@ -1,58 +1,56 @@
-<nav class="site-nav">
-  <div class="nav-container">
+<header class="page-header" role="banner">
+  <h1 class="project-name">{{ site.title | default: site.github.repository_name }}</h1>
+  <h2 class="project-tagline">{{ site.description | default: site.github.project_tagline }}</h2>
+  <a href="{{ site.github.repository_url }}" class="btn">View on GitHub</a>
+  
+  <nav class="doc-nav">
     {% for link in site.nav_links %}
       <a href="{{ link.url }}" class="nav-link {% if page.url == link.url %}active{% endif %}">
         {{ link.title }}
       </a>
     {% endfor %}
-  </div>
-</nav>
+  </nav>
+</header>
 
 <style>
-  .site-nav {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 1rem 0;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  }
-  
-  .nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
+  .doc-nav {
+    margin-top: 2rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: center;
   }
   
-  .nav-link {
-    color: white;
+  .doc-nav .nav-link {
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 4px;
+    font-size: 0.85rem;
     font-weight: 500;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
+    transition: all 0.2s ease;
   }
   
-  .nav-link:hover {
+  .doc-nav .nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
+  }
+  
+  .doc-nav .nav-link.active {
     background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.6);
+    color: white;
   }
   
-  .nav-link.active {
-    background: rgba(255, 255, 255, 0.3);
-    font-weight: 600;
-  }
-  
-  @media (max-width: 768px) {
-    .nav-container {
+  @media screen and (max-width: 42em) {
+    .doc-nav {
       flex-direction: column;
       align-items: stretch;
     }
     
-    .nav-link {
+    .doc-nav .nav-link {
       text-align: center;
     }
   }
