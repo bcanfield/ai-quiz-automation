@@ -1,6 +1,6 @@
 # Architecture
 
-How ai-quiz-automation is built and how the pieces fit together.
+How the code works.
 
 ## High-Level Overview
 
