@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "start": "tsx src/index.ts",
     "dev": "tsx watch src/index.ts",
-    "test": "tsx test/config-validation.ts"
+    "test": "tsx test/config-validation.ts",
+    "demo": "npx serve -p 8000"
   },
   "keywords": [
     "quiz",

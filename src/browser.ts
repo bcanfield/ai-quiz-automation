@@ -46,8 +46,8 @@ export class BrowserHelper {
     const questionContainer = await this.page.locator(this.config.selectors.questionContainer).first();
     const questionText = await questionContainer.innerText();
 
-    // Extract answer options from within the question container
-    const answerOptions = await this.page.locator(`${this.config.selectors.questionContainer} a.option.option-selector`).all();
+    // Extract answer options using the configured selector
+    const answerOptions = await this.page.locator(this.config.selectors.answerButton).all();
     const answers: string[] = [];
 
     for (const option of answerOptions) {
