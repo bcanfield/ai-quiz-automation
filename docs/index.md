@@ -1,8 +1,13 @@
+---
+layout: default
+title: Home
+---
+
 # AI Quiz Automation
 
 A browser automation tool that connects to Chrome and uses AI to answer quiz questions. Built as a proof of concept for learning about browser automation and AI integration.
 
-⚠️ **Important:** This is for educational purposes only. Read the [Ethics](#ethics) section below.
+⚠️ **Important:** This is for educational purposes only. Read the [Ethical Use Guidelines](ETHICAL_USE.html) before proceeding.
 
 ## Quick Start
 
@@ -35,7 +40,7 @@ npm start
 - **[Architecture](ARCHITECTURE.md)** - How the code works
 - **[Troubleshooting](TROUBLESHOOTING.md)** - Solutions to common issues
 
-## Ethics
+## ⚠️ Ethics & Legal Notice
 
 **This tool is for learning purposes only.** Using automation on real assessments:
 - Violates academic integrity policies
@@ -43,7 +48,7 @@ npm start
 - Defeats the purpose of education
 - Can result in expulsion or degree revocation
 
-See **[Ethical Use Guidelines](ETHICAL_USE.md)** for the full story.
+See **[Ethical Use Guidelines](ETHICAL_USE.html)** for complete details.
 
 ## How It Works
 

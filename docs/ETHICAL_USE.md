@@ -1,4 +1,9 @@
-# Ethics
+---
+layout: default
+title: Ethical Use Guidelines
+---
+
+# Ethical Use Guidelines
 
 ## What This Is For
 

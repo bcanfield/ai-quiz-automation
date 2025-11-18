@@ -1,93 +1,74 @@
-# ai-quiz-automation
+<div align="center">
 
-An AI-powered browser automation tool that connects to Chrome and answers quiz questions. Built as a proof of concept to explore AI integration with browser automation.
+# 🤖 AI Quiz Automation
+
+**AI-powered browser automation using Chrome DevTools Protocol**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+
+[📚 **Full Documentation**](https://bcanfield.github.io/quiz-helper/) • [🚀 Quick Start](#quick-start) • [⚙️ Configuration](https://bcanfield.github.io/quiz-helper/CONFIG.html)
 
 ![Demo](.github/demo.gif)
 
-**⚠️ This tool was NOT used for cheating.** It's a technical demonstration created in a controlled environment for learning purposes.
+</div>
 
-## What is this?
+---
 
-This tool demonstrates:
-- Connecting to an existing Chrome session using the Chrome DevTools Protocol
-- Extracting content from web pages with configurable CSS selectors
-- Using OpenAI to analyze questions and generate answers
-- Simulating human-like interaction patterns with random delays
+## Overview
+
+A proof-of-concept tool demonstrating AI integration with browser automation. Connects to Chrome via DevTools Protocol, extracts quiz questions using CSS selectors, and uses OpenAI to generate answers.
+
+**⚠️ Educational use only** — See [ethical guidelines](https://bcanfield.github.io/quiz-helper/ETHICAL_USE.html)
 
 ## Quick Start
 
 ```bash
-# Install
-npm install && npm run build
+# Install dependencies
+npm install
 
-# Setup API key
+# Add OpenAI API key
 echo "OPENAI_API_KEY=your-key-here" > .env
 
-# Configure for your quiz site
+# Configure selectors for your quiz site
 cp config.example.json config.json
-# Edit config.json with your CSS selectors
 
-# Start Chrome with debugging
+# Start Chrome with debugging enabled (macOS shown - see Setup Guide for other OS)
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 
-# Run
+# Run the automation
 npm start
 ```
 
-## Adapting to Your Quiz Site
+## Key Features
 
-The tool is designed to be easily adapted. You only need to:
-
-1. **Find the right CSS selectors** - Inspect your quiz page and identify:
-   - Where the question text appears (e.g., `.question-container`)
-   - The answer buttons (e.g., `button.choice-link`)
-   - The confirm/next button (e.g., `button.confirm-next`)
-
-2. **Update `config.json`** with your selectors
-
-That's it! The rest is abstracted and should work with most step-by-step quiz formats.
-
-See **[Adapting the Tool](docs/ADAPTING.md)** for a detailed guide.
+- 🔌 **Chrome DevTools Protocol** — Connect to existing browser sessions
+- 🎯 **CSS Selector Configuration** — Adapt to any quiz site in minutes
+- 🤖 **OpenAI Integration** — AI powered answer selection
+- ⏱️ **Human-like Timing** — Configurable delays for realistic interaction
+- 📝 **Multi-select Detection** — Automatically handles different question types
 
 ## Documentation
 
-📚 **[Full Documentation](https://bcanfield.github.io/ai-quiz-automation/)** - Complete guides and reference
+📘 Visit **[bcanfield.github.io/quiz-helper](https://bcanfield.github.io/quiz-helper/)** for complete documentation:
 
-Quick links:
-- **[Setup](docs/SETUP.md)** - Installation and configuration
-- **[Testing](docs/TESTING.md)** - Run the example quiz
-- **[Adapting](docs/ADAPTING.md)** - Configure for different sites
-- **[Configuration](docs/CONFIG.md)** - All config options
-- **[Architecture](docs/ARCHITECTURE.md)** - How the code works
-- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues
+- **[Setup Guide](https://bcanfield.github.io/quiz-helper/SETUP.html)** — Installation and configuration
+- **[Testing](https://bcanfield.github.io/quiz-helper/TESTING.html)** — Run the example quiz
+- **[Adapting](https://bcanfield.github.io/quiz-helper/ADAPTING.html)** — Configure for different quiz sites
+- **[Configuration Reference](https://bcanfield.github.io/quiz-helper/CONFIG.html)** — All available options
+- **[Architecture](https://bcanfield.github.io/quiz-helper/ARCHITECTURE.html)** — Technical deep dive
+- **[Troubleshooting](https://bcanfield.github.io/quiz-helper/TROUBLESHOOTING.html)** — Common issues
 
-## Important Ethical Warning
+## ⚠️ Important
 
-**⚠️ READ THIS BEFORE USING**
+This is a **proof of concept** for educational purposes only. Using automation on real assessments may:
+- Violate academic integrity policies
+- Break platform terms of service  
+- Be illegal under computer fraud laws
 
-This tool is a **proof of concept only**. Using automation tools on real assessments:
-
-- **May violate academic integrity policies** and result in serious consequences (expulsion, degree revocation)
-- **May violate terms of service** of testing platforms
-- **May be illegal** in some jurisdictions under computer fraud laws
-- **Will undermine your own learning** - the whole point of education
-
-**This repository is for:**
-- Learning about browser automation
-- Understanding AI integration patterns
-- Building similar tools for legitimate purposes (testing, accessibility, etc.)
-
-**This repository is NOT for:**
-- Cheating on real tests or assignments
-- Circumventing authentication or security
-- Any unauthorized access to systems
-
-By using this code, you accept full responsibility for ensuring your use is legal and ethical.
+**Read the [ethical use guidelines](https://bcanfield.github.io/quiz-helper/ETHICAL_USE.html) before proceeding.**
 
 ## License
 
-ISC - See LICENSE file for details
-
-## Disclaimer
-
-This software is for educational and research purposes only. The author assumes no liability for misuse. Users must ensure their usage complies with all applicable laws, institutional policies, and terms of service.
+[MIT](LICENSE) — Use responsibly and at your own risk.
