@@ -7,7 +7,7 @@ Complete documentation for ai-quiz-automation.
 New to ai-quiz-automation? Start here:
 
 1. **[Setup & Installation](SETUP.md)** - Get the tool running
-2. **[Testing](../TESTING.md)** - Verify it works with the example quiz
+2. **[Testing](TESTING.md)** - Verify it works with the example quiz
 3. **[Adapting the Tool](ADAPTING.md)** - Configure for your quiz site
 
 ## Reference Guides
@@ -24,7 +24,7 @@ New to ai-quiz-automation? Start here:
 
 ### Common Tasks
 
-- **I want to test if it works** → [Testing Guide](../TESTING.md)
+- **I want to test if it works** → [Testing Guide](TESTING.md)
 - **I want to use it on my quiz site** → [Adapting Guide](ADAPTING.md)
 - **I'm getting errors** → [Troubleshooting](TROUBLESHOOTING.md)
 - **I want to modify the code** → [Architecture](ARCHITECTURE.md)
